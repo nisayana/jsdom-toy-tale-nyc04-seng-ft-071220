@@ -38,7 +38,32 @@ document.addEventListener("DOMContentLoaded", () => {
       toyButton.innerText = "Like"
       toyCard.append(toyNameH2, toyImage, toyP, toyButton)
 
+      toyButton.addEventListener("click", (evt)=> {
+        let newLikeCount = toy.likes + 1
+        //Update Backend
+        fetch(`http://localhost:3000/toys/${toy.id}`, {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            likes: newLikeCount
+          })
+        })
+        .then(res => res.json())
+        .then(likeObj => {
+          //Update Memory
+          toy.likes = likeObj.likes
+          //Update FrontEnd
+          toyP.innerText = likeObj.likes
+        })
+
+      })  
+
     }   
+
+
+
     let newToyForm = document.querySelector("form.add-toy-form")
       newToyForm.addEventListener("submit", (event) => {
       event.preventDefault()
